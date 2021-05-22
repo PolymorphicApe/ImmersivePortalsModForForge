@@ -22,6 +22,7 @@ import com.qouteall.immersive_portals.teleportation.CollisionHelper;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -801,10 +802,17 @@ public class Portal extends Entity implements PortalLike {
         }
         
         final int maxVelocity = 15;
-        if (entity.getMotion().length() > maxVelocity) {
+        if (entity.getMotion().length() > maxVelocity) 
+		{
             // cannot be too fast
             entity.setMotion(entity.getMotion().normalize().scale(maxVelocity));
         }
+		
+		if (entity instanceof AbstractMinecartEntity && entity.getMotion().lengthSquared() < 0.5) 
+		{
+            entity.setMotion(entity.getMotion().normalize().scale(2));
+        }
+		
     }
     
     /**

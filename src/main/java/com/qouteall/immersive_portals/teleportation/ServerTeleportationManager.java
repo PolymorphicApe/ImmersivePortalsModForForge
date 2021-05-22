@@ -454,21 +454,19 @@ public class ServerTeleportationManager {
     }
     
     private static Vector3d getRegularEntityTeleportedEyePos(Entity entity, Portal portal) {
-        Vector3d eyePos = McHelper.getEyePos(entity);
+		Vector3d eyePosNextTick = McHelper.getEyePos(entity).add(entity.getMotion());
         if (entity instanceof ProjectileEntity) {
             Vector3d collidingPoint = portal.rayTrace(
-                eyePos.subtract(entity.getMotion().normalize().scale(5)),
-                eyePos
-            );
+                eyePosNextTick.subtract(entity.getMotion().normalize().scale(5)), eyePosNextTick);
             
             if (collidingPoint == null) {
-                collidingPoint = eyePos;
+                collidingPoint = eyePosNextTick;
             }
             
-            return portal.transformPoint(collidingPoint);
+            return portal.transformPoint(collidingPoint).add(portal.getContentDirection().scale(0.01));
         }
         else {
-            return portal.transformPoint(eyePos);
+            return portal.transformPoint(eyePosNextTick);
         }
     }
     
